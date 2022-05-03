@@ -21,9 +21,34 @@ namespace DorsetCollegeOnlineStore.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        // GET: Movies
+        public async Task<IActionResult> Index(string productCategory, string searchString)
         {
-            return View(await _context.Product.ToListAsync());
+            // Use LINQ to get list of genres.
+            IQueryable<string> categoryQuery =
+                from p in _context.Product
+                orderby p.Category
+                select p.Category;
+            var products = from p in _context.Product
+                select p;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(s => s.Title!.Contains(searchString));
+            }
+
+            if (!string.IsNullOrEmpty(productCategory))
+            {
+                products = products.Where(x => x.Category == productCategory);
+            }
+
+            var productCategoryVm = new ProductCategoryViewModel
+            {
+                Categories = new SelectList(await categoryQuery.Distinct().ToListAsync()),
+                Products = await products.ToListAsync()
+            };
+
+            return View(productCategoryVm);
         }
 
         // GET: Products/Details/5
@@ -55,7 +80,9 @@ namespace DorsetCollegeOnlineStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Price,Description,Category,Image,Rate,Count")] Product product)
+        public async Task<IActionResult> Create(
+            [Bind("Id,Title,Price,Description,Category,Image,Rate,Count")]
+            Product product)
         {
             if (ModelState.IsValid)
             {
@@ -63,6 +90,7 @@ namespace DorsetCollegeOnlineStore.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(product);
         }
 
@@ -79,6 +107,7 @@ namespace DorsetCollegeOnlineStore.Controllers
             {
                 return NotFound();
             }
+
             return View(product);
         }
 
@@ -87,7 +116,9 @@ namespace DorsetCollegeOnlineStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Price,Description,Category,Image,Rate,Count")] Product product)
+        public async Task<IActionResult> Edit(int id,
+            [Bind("Id,Title,Price,Description,Category,Image,Rate,Count")]
+            Product product)
         {
             if (id != product.Id)
             {
@@ -112,8 +143,10 @@ namespace DorsetCollegeOnlineStore.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(product);
         }
 

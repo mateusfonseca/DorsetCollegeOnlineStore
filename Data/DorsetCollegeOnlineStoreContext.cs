@@ -16,5 +16,13 @@ namespace DorsetCollegeOnlineStore.Data
         }
 
         public DbSet<DorsetCollegeOnlineStore.Models.Product> Product { get; set; }
+
+        public DbSet<DorsetCollegeOnlineStore.Models.User> User { get; set; }
+
+        public DbSet<DorsetCollegeOnlineStore.Models.Cart> Cart { get; set; }
+
+        public DbSet<DorsetCollegeOnlineStore.Models.Order> Order { get; set; }
+
+        public DbSet<DorsetCollegeOnlineStore.Models.CartProduct> CartProduct { get; set; }
     }
 }

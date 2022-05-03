@@ -1,8 +1,32 @@
-﻿@{
+﻿@model DorsetCollegeOnlineStore.Models.ProductCategoryViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">Welcome @Html.ViewData["Username"]</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Categories)
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Categories)
+    {
+        <tr>
+            <td>
+                <a asp-area="" asp-controller="Products" asp-action="Index" asp-route-productCategory="@item.Text">
+                    @Html.DisplayFor(modelItem => item.Text)
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

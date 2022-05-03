@@ -63,6 +63,7 @@ namespace DorsetCollegeOnlineStore.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(user);
         }
 
@@ -79,6 +80,7 @@ namespace DorsetCollegeOnlineStore.Controllers
             {
                 return NotFound();
             }
+
             return View(user);
         }
 
@@ -87,7 +89,9 @@ namespace DorsetCollegeOnlineStore.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Email,PhoneNumber,Password")] User user)
+        public async Task<IActionResult> Edit(int id,
+            [Bind("Id,FirstName,LastName,Email,PhoneNumber,Password")]
+            User user)
         {
             if (id != user.Id)
             {
@@ -112,8 +116,10 @@ namespace DorsetCollegeOnlineStore.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(user);
         }
 
@@ -149,6 +155,20 @@ namespace DorsetCollegeOnlineStore.Controllers
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.Id == id);
+        }
+
+        public IActionResult SignIn(string email, string password)
+        {
+            var user = from u in _context.User
+                where u.Email == email && u.Password == password
+                select u;
+
+            if (user.Any())
+            {
+                return RedirectToAction("Index", "Home", new {userId = user.Single().Id});
+            }
+
+            return NotFound();
         }
     }
 }

@@ -1,18 +1,12 @@
-@model TModel
-
 @{
-    Layout = null;
+    ViewData["Title"] = "Welcome";
 }
 
-<!DOCTYPE html>
+<h2>Welcome</h2>
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
-</div>
-</body>
-</html>
+<ul>
+    @for (int i = 0; i < (int)ViewData["NumTimes"]!; i++)
+    {
+        <li>@ViewData["Message"]</li>
+    }
+</ul>

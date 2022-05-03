@@ -65,6 +65,20 @@ namespace DorsetCollegeOnlineStore.Controllers
             }
             return View(cartProduct);
         }
+        
+        [HttpPost]
+        public async void Add(int quantity)
+        {
+            var cartProduct = new CartProduct
+            {
+                CartId = 1,
+                Id = 1,
+                ProductId = 1,
+                Quantity = quantity
+            };
+
+            await Create(cartProduct);
+        }
 
         // GET: CartProducts/Edit/5
         public async Task<IActionResult> Edit(int? id)
