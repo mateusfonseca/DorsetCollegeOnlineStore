@@ -22,6 +22,7 @@
 
     <ItemGroup>
       <Content Remove="Views\Products\Product.cshtml" />
+      <Content Remove="Views\HelloWorld\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -35,15 +36,27 @@
       <_ContentIncludedByDefault Remove="Views\Orders\Details.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Orders\Edit.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Orders\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\HelloWorld\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\HelloWorld\Welcome.cshtml" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="Views\Users\Index" />
+      <None Remove="Views\HelloWorld\**" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Migrations" />
       <Folder Include="Views\Users" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Controllers\HelloWorldController.cs" />
+      <Compile Remove="Views\HelloWorld\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Views\HelloWorld\**" />
     </ItemGroup>
 
 </Project>

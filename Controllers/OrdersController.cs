@@ -1,10 +1,20 @@
+/*
+ Dorset College Dublin
+ BSc in Science in Computing & Multimedia
+ Object-Oriented Programming - BSC20921
+ Stage 2, Semester 2
+ Continuous Assessment 2
+ 
+ Student Name: Mateus Fonseca Campos
+ Student Number: 24088
+ Student Email: 24088@student.dorset-college.ie
+ 
+ Submission date: 8 May 2022
+*/
+
 #nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DorsetCollegeOnlineStore.Data;
 using DorsetCollegeOnlineStore.Models;
@@ -25,10 +35,10 @@ namespace DorsetCollegeOnlineStore.Controllers
         {
             if (Session.UserId == null)
                 return RedirectToAction("Index", "Users");
-            
+
             var allOrders = await _context.Order.ToListAsync();
             var userOrders = allOrders.FindAll(o => o.UserId == Session.UserId);
-            
+
             return View(userOrders);
         }
 
@@ -46,7 +56,7 @@ namespace DorsetCollegeOnlineStore.Controllers
             {
                 return NotFound();
             }
-            
+
             var orderProducts = await _context.OrderProduct.ToListAsync();
 
             if (orderProducts.Count > 0)
@@ -71,9 +81,10 @@ namespace DorsetCollegeOnlineStore.Controllers
 
                 var subtotal = orderProductsVm.Products.Select(p =>
                     p.Price * orderProducts.Single(cp => cp.ProductId == p.Id)!.Quantity).ToList();
+
                 orderProductsVm.Subtotals = productsIds.Zip(subtotal, (k, v) => new {k, v})
                     .ToDictionary(x => x.k, x => x.v);
-                // orderProductsVm.TotalPrice = orderProductsVm.Products.Aggregate(0M, (acc, p) => acc + p.Price * orderProducts.Single(op => op.ProductId == p.Id)!.Quantity);
+
                 orderProductsVm.TotalPrice = orderProductsVm.Subtotals.Values.Aggregate(0M, (acc, sub) => acc + sub);
 
                 return View(orderProductsVm);
@@ -89,8 +100,6 @@ namespace DorsetCollegeOnlineStore.Controllers
         }
 
         // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserId,Date")] Order order)
@@ -101,6 +110,7 @@ namespace DorsetCollegeOnlineStore.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(order);
         }
 
@@ -117,12 +127,11 @@ namespace DorsetCollegeOnlineStore.Controllers
             {
                 return NotFound();
             }
+
             return View(order);
         }
 
         // POST: Orders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,Date")] Order order)
@@ -145,13 +154,13 @@ namespace DorsetCollegeOnlineStore.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(order);
         }
 
@@ -179,7 +188,7 @@ namespace DorsetCollegeOnlineStore.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var order = await _context.Order.FindAsync(id);
-            _context.Order.Remove(order);
+            _context.Order.Remove(order!);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

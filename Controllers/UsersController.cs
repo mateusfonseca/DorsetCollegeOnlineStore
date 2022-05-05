@@ -1,10 +1,20 @@
+/*
+ Dorset College Dublin
+ BSc in Science in Computing & Multimedia
+ Object-Oriented Programming - BSC20921
+ Stage 2, Semester 2
+ Continuous Assessment 2
+ 
+ Student Name: Mateus Fonseca Campos
+ Student Number: 24088
+ Student Email: 24088@student.dorset-college.ie
+ 
+ Submission date: 8 May 2022
+*/
+
 #nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DorsetCollegeOnlineStore.Data;
 using DorsetCollegeOnlineStore.Models;
@@ -30,7 +40,7 @@ namespace DorsetCollegeOnlineStore.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             id = Session.UserId;
-            
+
             if (id == null)
             {
                 return RedirectToAction("Index");
@@ -53,8 +63,6 @@ namespace DorsetCollegeOnlineStore.Controllers
         }
 
         // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Email,PhoneNumber,Password")] User user)
@@ -89,8 +97,6 @@ namespace DorsetCollegeOnlineStore.Controllers
         }
 
         // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
@@ -115,10 +121,8 @@ namespace DorsetCollegeOnlineStore.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -151,7 +155,7 @@ namespace DorsetCollegeOnlineStore.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var user = await _context.User.FindAsync(id);
-            _context.User.Remove(user);
+            _context.User.Remove(user!);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -176,7 +180,7 @@ namespace DorsetCollegeOnlineStore.Controllers
             return NotFound();
         }
 
-        public IActionResult SignOut()
+        public new IActionResult SignOut()
         {
             Session.UserId = null;
             return RedirectToAction("Index", "Home");

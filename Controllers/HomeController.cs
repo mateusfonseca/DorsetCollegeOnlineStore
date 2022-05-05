@@ -1,4 +1,18 @@
-﻿using System.Diagnostics;
+﻿/*
+ Dorset College Dublin
+ BSc in Science in Computing & Multimedia
+ Object-Oriented Programming - BSC20921
+ Stage 2, Semester 2
+ Continuous Assessment 2
+ 
+ Student Name: Mateus Fonseca Campos
+ Student Number: 24088
+ Student Email: 24088@student.dorset-college.ie
+ 
+ Submission date: 8 May 2022
+*/
+
+using System.Diagnostics;
 using DorsetCollegeOnlineStore.Data;
 using Microsoft.AspNetCore.Mvc;
 using DorsetCollegeOnlineStore.Models;
@@ -20,7 +34,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index(string productCategory, string searchString)
     {
-        // Use LINQ to get list of genres.
+        // Use LINQ to get list of categories.
         IQueryable<string> categoryQuery =
             from p in _context.Product
             orderby p.Category
@@ -47,7 +61,7 @@ public class HomeController : Controller
         var username = from u in _context.User
             where u.Id == Session.UserId
             select u;
-        
+
         if (username.Any())
             ViewData["Username"] = username.Single().FirstName;
 

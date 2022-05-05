@@ -1,12 +1,27 @@
+/*
+ Dorset College Dublin
+ BSc in Science in Computing & Multimedia
+ Object-Oriented Programming - BSC20921
+ Stage 2, Semester 2
+ Continuous Assessment 2
+ 
+ Student Name: Mateus Fonseca Campos
+ Student Number: 24088
+ Student Email: 24088@student.dorset-college.ie
+ 
+ Submission date: 8 May 2022
+*/
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using DorsetCollegeOnlineStore.Data;
 using DorsetCollegeOnlineStore.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DorsetCollegeOnlineStoreContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DorsetCollegeOnlineStoreContext") ?? throw new InvalidOperationException("Connection string 'DorsetCollegeOnlineStoreContext' not found.")));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DorsetCollegeOnlineStoreContext") ??
+                      throw new InvalidOperationException(
+                          "Connection string 'DorsetCollegeOnlineStoreContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

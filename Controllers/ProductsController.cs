@@ -1,8 +1,19 @@
+/*
+ Dorset College Dublin
+ BSc in Science in Computing & Multimedia
+ Object-Oriented Programming - BSC20921
+ Stage 2, Semester 2
+ Continuous Assessment 2
+ 
+ Student Name: Mateus Fonseca Campos
+ Student Number: 24088
+ Student Email: 24088@student.dorset-college.ie
+ 
+ Submission date: 8 May 2022
+*/
+
 #nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +32,9 @@ namespace DorsetCollegeOnlineStore.Controllers
         }
 
         // GET: Products
-        // GET: Movies
         public async Task<IActionResult> Index(string productCategory, string searchString)
         {
-            // Use LINQ to get list of genres.
+            // Use LINQ to get list of categories.
             IQueryable<string> categoryQuery =
                 from p in _context.Product
                 orderby p.Category
@@ -47,7 +57,7 @@ namespace DorsetCollegeOnlineStore.Controllers
                 Categories = new SelectList(await categoryQuery.Distinct().ToListAsync()),
                 Products = await products.ToListAsync()
             };
-            
+
             ViewData["Category"] = productCategory ?? "All";
 
             return View(productCategoryVm);
@@ -78,8 +88,6 @@ namespace DorsetCollegeOnlineStore.Controllers
         }
 
         // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
@@ -114,8 +122,6 @@ namespace DorsetCollegeOnlineStore.Controllers
         }
 
         // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
@@ -140,10 +146,8 @@ namespace DorsetCollegeOnlineStore.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -176,7 +180,7 @@ namespace DorsetCollegeOnlineStore.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Product.FindAsync(id);
-            _context.Product.Remove(product);
+            _context.Product.Remove(product!);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

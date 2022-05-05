@@ -1,10 +1,20 @@
+/*
+ Dorset College Dublin
+ BSc in Science in Computing & Multimedia
+ Object-Oriented Programming - BSC20921
+ Stage 2, Semester 2
+ Continuous Assessment 2
+ 
+ Student Name: Mateus Fonseca Campos
+ Student Number: 24088
+ Student Email: 24088@student.dorset-college.ie
+ 
+ Submission date: 8 May 2022
+*/
+
 #nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DorsetCollegeOnlineStore.Data;
 using DorsetCollegeOnlineStore.Models;
@@ -67,9 +77,10 @@ namespace DorsetCollegeOnlineStore.Controllers
 
                 var subtotal = cartProductsVm.Products.Select(p =>
                     p.Price * cartProducts.Single(cp => cp.ProductId == p.Id)!.Quantity).ToList();
+
                 cartProductsVm.Subtotals = productsIds.Zip(subtotal, (k, v) => new {k, v})
                     .ToDictionary(x => x.k, x => x.v);
-                // cartProductsVm.TotalPrice = cartProductsVm.Products.Aggregate(0M, (acc, p) => acc + p.Price * cartProducts.Single(op => op.ProductId == p.Id)!.Quantity);
+
                 cartProductsVm.TotalPrice = cartProductsVm.Subtotals.Values.Aggregate(0M, (acc, sub) => acc + sub);
 
                 return View(cartProductsVm);
@@ -85,8 +96,6 @@ namespace DorsetCollegeOnlineStore.Controllers
         }
 
         // POST: Carts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,UserId")] Cart cart)
@@ -119,8 +128,6 @@ namespace DorsetCollegeOnlineStore.Controllers
         }
 
         // POST: Carts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,UserId")] Cart cart)
@@ -143,10 +150,8 @@ namespace DorsetCollegeOnlineStore.Controllers
                     {
                         return NotFound();
                     }
-                    else
-                    {
-                        throw;
-                    }
+
+                    throw;
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -179,7 +184,7 @@ namespace DorsetCollegeOnlineStore.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var cart = await _context.Cart.FindAsync(id);
-            _context.Cart.Remove(cart);
+            _context.Cart.Remove(cart!);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -189,11 +194,13 @@ namespace DorsetCollegeOnlineStore.Controllers
             return _context.Cart.Any(e => e.Id == id);
         }
 
+        // GET: Carts/Empty
         public IActionResult Empty()
         {
             return View();
         }
 
+        // GET: Carts/CheckOut/5
         public async Task<IActionResult> CheckOut(int? id)
         {
             var order = new Order()
@@ -221,22 +228,24 @@ namespace DorsetCollegeOnlineStore.Controllers
             return RedirectToAction("Index", "Orders");
         }
 
+        // GET: Carts/Remove?cartId=5&productId=5
         public async Task<IActionResult> Remove(int? productId, int? cartId)
         {
             var cartProduct = _context.CartProduct.Single(cp => cp.CartId == cartId && cp.ProductId == productId);
             _context.CartProduct.Remove(cartProduct);
             await _context.SaveChangesAsync();
-            
+
             return RedirectToAction("Details", "Carts");
         }
 
+        // GET: Carts/Update?cartId=5&productId=5&quantity=5
         public async Task<IActionResult> Update(int? cartId, int? productId, int quantity)
         {
             var cartProduct = _context.CartProduct.Single(cp => cp.CartId == cartId && cp.ProductId == productId);
             cartProduct.Quantity = quantity;
             _context.CartProduct.Update(cartProduct);
             await _context.SaveChangesAsync();
-            
+
             return RedirectToAction("Details", "Carts");
         }
     }

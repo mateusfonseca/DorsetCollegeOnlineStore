@@ -1,3 +1,17 @@
+@*
+ Dorset College Dublin
+ BSc in Science in Computing & Multimedia
+ Object-Oriented Programming - BSC20921
+ Stage 2, Semester 2
+ Continuous Assessment 2
+ 
+ Student Name: Mateus Fonseca Campos
+ Student Number: 24088
+ Student Email: 24088@student.dorset-college.ie
+ 
+ Submission date: 8 May 2022
+*@
+
 @model DorsetCollegeOnlineStore.Models.CartProduct
 
 @{
@@ -7,28 +21,28 @@
 <h1>Create</h1>
 
 <h4>CartProduct</h4>
-<hr />
+<hr/>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="CartId" class="control-label"></label>
-                <input asp-for="CartId" class="form-control" />
+                <input asp-for="CartId" class="form-control"/>
                 <span asp-validation-for="CartId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ProductId" class="control-label"></label>
-                <input asp-for="ProductId" class="form-control" />
+                <input asp-for="ProductId" class="form-control"/>
                 <span asp-validation-for="ProductId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
+                <input asp-for="Quantity" class="form-control"/>
                 <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-primary"/>
             </div>
         </form>
     </div>
