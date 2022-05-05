@@ -18,7 +18,7 @@ public class HomeController : Controller
         _context = context;
     }
 
-    public async Task<IActionResult> Index(string productCategory, string searchString, int? userId)
+    public async Task<IActionResult> Index(string productCategory, string searchString)
     {
         // Use LINQ to get list of genres.
         IQueryable<string> categoryQuery =
@@ -45,7 +45,7 @@ public class HomeController : Controller
         };
 
         var username = from u in _context.User
-            where u.Id == userId
+            where u.Id == Session.UserId
             select u;
         
         if (username.Any())

@@ -24,5 +24,7 @@ namespace DorsetCollegeOnlineStore.Data
         public DbSet<DorsetCollegeOnlineStore.Models.Order> Order { get; set; }
 
         public DbSet<DorsetCollegeOnlineStore.Models.CartProduct> CartProduct { get; set; }
+
+        public DbSet<DorsetCollegeOnlineStore.Models.OrderProduct> OrderProduct { get; set; }
     }
 }

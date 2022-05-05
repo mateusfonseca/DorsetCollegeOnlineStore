@@ -11,22 +11,22 @@ using DorsetCollegeOnlineStore.Models;
 
 namespace DorsetCollegeOnlineStore.Controllers
 {
-    public class CartProductsController : Controller
+    public class OrderProductsController : Controller
     {
         private readonly DorsetCollegeOnlineStoreContext _context;
 
-        public CartProductsController(DorsetCollegeOnlineStoreContext context)
+        public OrderProductsController(DorsetCollegeOnlineStoreContext context)
         {
             _context = context;
         }
 
-        // GET: CartProducts
+        // GET: OrderProducts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.CartProduct.ToListAsync());
+            return View(await _context.OrderProduct.ToListAsync());
         }
 
-        // GET: CartProducts/Details/5
+        // GET: OrderProducts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,52 +34,39 @@ namespace DorsetCollegeOnlineStore.Controllers
                 return NotFound();
             }
 
-            var cartProduct = await _context.CartProduct
+            var orderProduct = await _context.OrderProduct
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cartProduct == null)
+            if (orderProduct == null)
             {
                 return NotFound();
             }
 
-            return View(cartProduct);
+            return View(orderProduct);
         }
 
-        // GET: CartProducts/Create
+        // GET: OrderProducts/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: CartProducts/Create
+        // POST: OrderProducts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CartId,ProductId,Quantity")] CartProduct cartProduct)
+        public async Task<IActionResult> Create([Bind("Id,OrderId,ProductId,Quantity")] OrderProduct orderProduct)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(cartProduct);
+                _context.Add(orderProduct);
                 await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            return View();
-        }
-        
-        [HttpPost]
-        public async Task<IActionResult> Add(int quantity, int productId)
-        {
-            var cartProduct = new CartProduct
-            {
-                CartId = _context.Cart.ToList().Find(c => c.UserId == Session.UserId)!.Id,
-                ProductId = productId,
-                Quantity = quantity
-            };
-
-            await Create(cartProduct);
-            return RedirectToAction("Details","Carts");
+            return View(orderProduct);
         }
 
-        // GET: CartProducts/Edit/5
+        // GET: OrderProducts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -87,22 +74,22 @@ namespace DorsetCollegeOnlineStore.Controllers
                 return NotFound();
             }
 
-            var cartProduct = await _context.CartProduct.FindAsync(id);
-            if (cartProduct == null)
+            var orderProduct = await _context.OrderProduct.FindAsync(id);
+            if (orderProduct == null)
             {
                 return NotFound();
             }
-            return View(cartProduct);
+            return View(orderProduct);
         }
 
-        // POST: CartProducts/Edit/5
+        // POST: OrderProducts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CartId,ProductId,Quantity")] CartProduct cartProduct)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,OrderId,ProductId,Quantity")] OrderProduct orderProduct)
         {
-            if (id != cartProduct.Id)
+            if (id != orderProduct.Id)
             {
                 return NotFound();
             }
@@ -111,12 +98,12 @@ namespace DorsetCollegeOnlineStore.Controllers
             {
                 try
                 {
-                    _context.Update(cartProduct);
+                    _context.Update(orderProduct);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CartProductExists(cartProduct.Id))
+                    if (!OrderProductExists(orderProduct.Id))
                     {
                         return NotFound();
                     }
@@ -127,10 +114,10 @@ namespace DorsetCollegeOnlineStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(cartProduct);
+            return View(orderProduct);
         }
 
-        // GET: CartProducts/Delete/5
+        // GET: OrderProducts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -138,30 +125,30 @@ namespace DorsetCollegeOnlineStore.Controllers
                 return NotFound();
             }
 
-            var cartProduct = await _context.CartProduct
+            var orderProduct = await _context.OrderProduct
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cartProduct == null)
+            if (orderProduct == null)
             {
                 return NotFound();
             }
 
-            return View(cartProduct);
+            return View(orderProduct);
         }
 
-        // POST: CartProducts/Delete/5
+        // POST: OrderProducts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var cartProduct = await _context.CartProduct.FindAsync(id);
-            _context.CartProduct.Remove(cartProduct);
+            var orderProduct = await _context.OrderProduct.FindAsync(id);
+            _context.OrderProduct.Remove(orderProduct);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CartProductExists(int id)
+        private bool OrderProductExists(int id)
         {
-            return _context.CartProduct.Any(e => e.Id == id);
+            return _context.OrderProduct.Any(e => e.Id == id);
         }
     }
 }

@@ -23,7 +23,13 @@ namespace DorsetCollegeOnlineStore.Controllers
         // GET: Orders
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Order.ToListAsync());
+            if (Session.UserId == null)
+                return RedirectToAction("Index", "Users");
+            
+            var allOrders = await _context.Order.ToListAsync();
+            var userOrders = allOrders.FindAll(o => o.UserId == Session.UserId);
+            
+            return View(userOrders);
         }
 
         // GET: Orders/Details/5
@@ -40,8 +46,40 @@ namespace DorsetCollegeOnlineStore.Controllers
             {
                 return NotFound();
             }
+            
+            var orderProducts = await _context.OrderProduct.ToListAsync();
 
-            return View(order);
+            if (orderProducts.Count > 0)
+            {
+                orderProducts = orderProducts.FindAll(op => op.OrderId == id).OrderBy(cp => cp.ProductId).ToList();
+
+                if (orderProducts.Count < 1)
+                    return NotFound();
+
+                var productsIds = orderProducts.Select(cp => cp.ProductId).ToList();
+                var productsQtties = orderProducts.Select(cp => cp.Quantity).ToList();
+
+                var orderProductsVm = new OrderProductViewModel
+                {
+                    Quantities = productsIds.Zip(productsQtties, (k, v) => new {k, v})
+                        .ToDictionary(x => x.k, x => x.v),
+                    OrderId = order.Id,
+                    ProductsIds = productsIds,
+                    Products = _context.Product.ToListAsync().Result
+                        .Where(p => productsIds.Contains(p.Id)).ToList()
+                };
+
+                var subtotal = orderProductsVm.Products.Select(p =>
+                    p.Price * orderProducts.Single(cp => cp.ProductId == p.Id)!.Quantity).ToList();
+                orderProductsVm.Subtotals = productsIds.Zip(subtotal, (k, v) => new {k, v})
+                    .ToDictionary(x => x.k, x => x.v);
+                // orderProductsVm.TotalPrice = orderProductsVm.Products.Aggregate(0M, (acc, p) => acc + p.Price * orderProducts.Single(op => op.ProductId == p.Id)!.Quantity);
+                orderProductsVm.TotalPrice = orderProductsVm.Subtotals.Values.Aggregate(0M, (acc, sub) => acc + sub);
+
+                return View(orderProductsVm);
+            }
+
+            return View();
         }
 
         // GET: Orders/Create

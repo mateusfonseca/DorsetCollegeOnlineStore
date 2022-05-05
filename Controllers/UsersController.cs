@@ -29,9 +29,11 @@ namespace DorsetCollegeOnlineStore.Controllers
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            id = Session.UserId;
+            
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction("Index");
             }
 
             var user = await _context.User
@@ -60,6 +62,8 @@ namespace DorsetCollegeOnlineStore.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(user);
+                await _context.SaveChangesAsync();
+                _context.Cart.Add(new Cart() {UserId = user.Id});
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -165,10 +169,17 @@ namespace DorsetCollegeOnlineStore.Controllers
 
             if (user.Any())
             {
+                Session.UserId = user.Single().Id;
                 return RedirectToAction("Index", "Home", new {userId = user.Single().Id});
             }
 
             return NotFound();
+        }
+
+        public IActionResult SignOut()
+        {
+            Session.UserId = null;
+            return RedirectToAction("Index", "Home");
         }
     }
 }

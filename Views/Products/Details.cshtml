@@ -55,20 +55,11 @@
     </dl>
 </div>
 <div>
-    @using (Html.BeginForm("Add", "CartProducts"))
-    {
-        @* @Html.HiddenFor(m => m.PersonID) *@
-        @* <select name="FavoriteColor"> *@
-        @*   <option value="red">Red</option> *@
-        @*   <option value="blue">Blue</option> *@
-        @*   <option value="green">Green</option> *@
-        @*   <option value="yellow">Yellow</option> *@
-        @* </select> *@
-        <input type="number" name="Quantity" value="Add" />
+    <form asp-controller="CartProducts" asp-action="Add" asp-route-productId="@Model.Id">
+        <input type="number" min="1" name="Quantity" value="1" />
         <input type="submit" name="Add" value="Add" />
-    }
+    </form>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

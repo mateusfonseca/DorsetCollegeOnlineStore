@@ -1,24 +1,80 @@
-@model DorsetCollegeOnlineStore.Models.Cart
+@model DorsetCollegeOnlineStore.Models.CartProductViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Products in Cart</h1>
 
 <div>
-    <h4>Cart</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-    </dl>
+    <hr/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Products![0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Products![0].Price)
+            </th>
+
+            <th>
+                Quantity
+            </th>
+            <th>
+                Subtotal
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Products![0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Products![0].Category)
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Products!)
+        {
+            <tr>
+                <td>
+                    <img width="200" height="200" src="@Html.DisplayFor(modelItem => item.Image)"/>
+                </td>
+                <td>
+
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    <form asp-controller="Carts" asp-action="Update" asp-route-cartId="@Model.CartId", asp-route-productId="@item.Id">
+                        <input type="number" min="1" name="Quantity" value="@Html.DisplayFor(modelItem => modelItem.Quantities![item.Id])"/>
+                        <input type="submit" name="Quantity" value="Update" />
+                    </form>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => modelItem.Subtotals![item.Id])
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category)
+                </td>
+                <td>
+                    <a asp-area="" asp-controller="Products" asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Remove" asp-route-cartId="@Model.CartId" asp-route-productId="@item.Id">Remove</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <p>Total: @Model.TotalPrice?.ToString("C")</p>
+    <form asp-controller="Carts" asp-action="CheckOut" asp-route-id="@Model.CartId">
+        <input type="submit" value="Check-Out"/>
+    </form>
 </div>

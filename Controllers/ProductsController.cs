@@ -34,7 +34,7 @@ namespace DorsetCollegeOnlineStore.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                products = products.Where(s => s.Title!.Contains(searchString));
+                products = products.Where(s => s.Title.ToLower().Contains(searchString.ToLower()));
             }
 
             if (!string.IsNullOrEmpty(productCategory))
@@ -47,6 +47,8 @@ namespace DorsetCollegeOnlineStore.Controllers
                 Categories = new SelectList(await categoryQuery.Distinct().ToListAsync()),
                 Products = await products.ToListAsync()
             };
+            
+            ViewData["Category"] = productCategory ?? "All";
 
             return View(productCategoryVm);
         }

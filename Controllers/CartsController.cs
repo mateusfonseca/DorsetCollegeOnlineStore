@@ -29,19 +29,53 @@ namespace DorsetCollegeOnlineStore.Controllers
         // GET: Carts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var allCarts = await _context.Cart.ToListAsync();
+
+            if (Session.UserId != null)
+                id = allCarts.Last(c => c.UserId == Session.UserId).Id;
+            else
+                return RedirectToAction("Index", "Users");
 
             var cart = await _context.Cart
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.UserId == id);
             if (cart == null)
             {
                 return NotFound();
             }
 
-            return View(cart);
+            var cartProducts = await _context.CartProduct.ToListAsync();
+
+            if (cartProducts.Count > 0)
+            {
+                cartProducts = cartProducts.FindAll(cp => cp.CartId == id).OrderBy(cp => cp.ProductId).ToList();
+
+                if (cartProducts.Count < 1)
+                    return RedirectToAction("Empty");
+
+                var productsIds = cartProducts.Select(cp => cp.ProductId).ToList();
+                var productsQtties = cartProducts.Select(cp => cp.Quantity).ToList();
+
+                var cartProductsVm = new CartProductViewModel
+                {
+                    Quantities = productsIds.Zip(productsQtties, (k, v) => new {k, v})
+                        .ToDictionary(x => x.k, x => x.v),
+                    CartId = cart.Id,
+                    ProductsIds = productsIds,
+                    Products = _context.Product.ToListAsync().Result
+                        .Where(p => productsIds.Contains(p.Id)).ToList(),
+                };
+
+                var subtotal = cartProductsVm.Products.Select(p =>
+                    p.Price * cartProducts.Single(cp => cp.ProductId == p.Id)!.Quantity).ToList();
+                cartProductsVm.Subtotals = productsIds.Zip(subtotal, (k, v) => new {k, v})
+                    .ToDictionary(x => x.k, x => x.v);
+                // cartProductsVm.TotalPrice = cartProductsVm.Products.Aggregate(0M, (acc, p) => acc + p.Price * cartProducts.Single(op => op.ProductId == p.Id)!.Quantity);
+                cartProductsVm.TotalPrice = cartProductsVm.Subtotals.Values.Aggregate(0M, (acc, sub) => acc + sub);
+
+                return View(cartProductsVm);
+            }
+
+            return View();
         }
 
         // GET: Carts/Create
@@ -63,6 +97,7 @@ namespace DorsetCollegeOnlineStore.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(cart);
         }
 
@@ -79,6 +114,7 @@ namespace DorsetCollegeOnlineStore.Controllers
             {
                 return NotFound();
             }
+
             return View(cart);
         }
 
@@ -112,8 +148,10 @@ namespace DorsetCollegeOnlineStore.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(cart);
         }
 
@@ -149,6 +187,57 @@ namespace DorsetCollegeOnlineStore.Controllers
         private bool CartExists(int id)
         {
             return _context.Cart.Any(e => e.Id == id);
+        }
+
+        public IActionResult Empty()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> CheckOut(int? id)
+        {
+            var order = new Order()
+            {
+                UserId = Session.UserId,
+                Date = DateTime.Now.Date
+            };
+
+            _context.Order.Add(order);
+            await _context.SaveChangesAsync();
+
+            foreach (var cartProduct in _context.CartProduct.ToList().FindAll(cp => cp.CartId == id))
+            {
+                _context.OrderProduct.Add(new OrderProduct()
+                {
+                    OrderId = order.Id,
+                    ProductId = cartProduct.ProductId,
+                    Quantity = cartProduct.Quantity
+                });
+
+                _context.CartProduct.Remove(cartProduct);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Orders");
+        }
+
+        public async Task<IActionResult> Remove(int? productId, int? cartId)
+        {
+            var cartProduct = _context.CartProduct.Single(cp => cp.CartId == cartId && cp.ProductId == productId);
+            _context.CartProduct.Remove(cartProduct);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Details", "Carts");
+        }
+
+        public async Task<IActionResult> Update(int? cartId, int? productId, int quantity)
+        {
+            var cartProduct = _context.CartProduct.Single(cp => cp.CartId == cartId && cp.ProductId == productId);
+            cartProduct.Quantity = quantity;
+            _context.CartProduct.Update(cartProduct);
+            await _context.SaveChangesAsync();
+            
+            return RedirectToAction("Details", "Carts");
         }
     }
 }
