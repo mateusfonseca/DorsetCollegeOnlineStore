@@ -15,7 +15,7 @@
 @model DorsetCollegeOnlineStore.Models.CartProductViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Cart";
 }
 
 <h1>Products in Cart</h1>
@@ -53,7 +53,7 @@
         {
             <tr>
                 <td>
-                    <img width="200" height="200" src="@Html.DisplayFor(modelItem => item.Image)"/>
+                    <img alt="Product image" width="200" height="200" src="@Html.DisplayFor(modelItem => item.Image)"/>
                 </td>
                 <td>
 
@@ -63,7 +63,7 @@
                     @Html.DisplayFor(modelItem => item.Price)
                 </td>
                 <td>
-                    <form asp-controller="Carts" asp-action="Update" asp-route-cartId="@Model.CartId", asp-route-productId="@item.Id">
+                    <form asp-controller="Carts" asp-action="Update" asp-route-cartId="@Model.CartId" asp-route-productId="@item.Id">
                         <input type="number" min="1" name="Quantity" value="@Html.DisplayFor(modelItem => modelItem.Quantities![item.Id])"/>
                         <input type="submit" name="Quantity" value="Update"/>
                     </form>

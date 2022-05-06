@@ -15,7 +15,7 @@
 @model DorsetCollegeOnlineStore.Models.ProductCategoryViewModel
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
 <div class="text-center">
@@ -32,7 +32,7 @@
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model.Categories)
+    @foreach (var item in Model.Categories!)
     {
         <tr>
             <td>

@@ -31,8 +31,11 @@ namespace DorsetCollegeOnlineStore.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool attempted = false)
         {
+            if (attempted)
+                ViewBag.Message = "User not found! Please, check your credentials.";
+            
             return View(await _context.User.ToListAsync());
         }
 
@@ -174,10 +177,10 @@ namespace DorsetCollegeOnlineStore.Controllers
             if (user.Any())
             {
                 Session.UserId = user.Single().Id;
-                return RedirectToAction("Index", "Home", new {userId = user.Single().Id});
+                return RedirectToAction("Index", "Home", new { userId = user.Single().Id });
             }
 
-            return NotFound();
+            return RedirectToAction("Index", new { attempted = true });
         }
 
         public new IActionResult SignOut()

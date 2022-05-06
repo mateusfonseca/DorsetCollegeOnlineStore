@@ -12,15 +12,26 @@
  Submission date: 8 May 2022
 */
 
+using System.ComponentModel.DataAnnotations;
+
 namespace DorsetCollegeOnlineStore.Models;
 
 public class User
 {
     public int Id { get; set; }
+
+    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Letters only!")]
     public string? FirstName { get; set; }
+
+    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Letters only!")]
     public string? LastName { get; set; }
+
+    [EmailAddress(ErrorMessage = "Invalid email address!")]
     public string? Email { get; set; }
+
+    [RegularExpression(@"^[0-9]+((\-)?[0-9]+)*$", ErrorMessage = "Numbers and hyphens only!")]
     public string? PhoneNumber { get; set; }
+
     public string? Password { get; set; }
     public string? Image { get; set; }
 

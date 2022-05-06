@@ -15,13 +15,20 @@
 @model IEnumerable<DorsetCollegeOnlineStore.Models.User>
 
 @{
-    ViewData["Title"] = "User";
+    ViewData["Title"] = "Sign In";
+
+    if (ViewBag.Message != null)
+    {
+        <script>
+            alert("@ViewBag.Message");
+        </script>
+    }
 }
 
 <p>Already a customer?</p>
 <form asp-action="SignIn" method="post">
-    Email: <input type="text" name="email"/>
-    Password: <input type="password" name="password"/>
+    Email: <input type="text" name="email" required autofocus/>
+    Password: <input type="password" name="password" required/>
 
     <button type="submit">Login</button>
 </form>

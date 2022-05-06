@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DorsetCollegeOnlineStore.Migrations
 {
     [DbContext(typeof(DorsetCollegeOnlineStoreContext))]
-    [Migration("20220504232637_InitialMigration")]
+    [Migration("20220506110408_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -15,7 +15,7 @@
 @model DorsetCollegeOnlineStore.Models.ProductCategoryViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Products";
 }
 
 <h1>Products</h1>
@@ -24,6 +24,7 @@
 <table class="table">
     <thead>
     <tr>
+        <th></th>
         <th>
             @Html.DisplayNameFor(model => model.Products![0].Title)
         </th>
@@ -35,9 +36,6 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Products![0].Category)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Products![0].Image)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Products![0].Rate)
