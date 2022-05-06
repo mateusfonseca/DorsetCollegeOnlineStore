@@ -28,6 +28,8 @@ namespace DorsetCollegeOnlineStore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Cart");
                 });
 
@@ -48,6 +50,10 @@ namespace DorsetCollegeOnlineStore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("ProductId");
+
                     b.ToTable("CartProduct");
                 });
 
@@ -64,6 +70,8 @@ namespace DorsetCollegeOnlineStore.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Order");
                 });
@@ -84,6 +92,10 @@ namespace DorsetCollegeOnlineStore.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("OrderProduct");
                 });
@@ -147,6 +159,64 @@ namespace DorsetCollegeOnlineStore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User");
+                });
+
+            modelBuilder.Entity("DorsetCollegeOnlineStore.Models.Cart", b =>
+                {
+                    b.HasOne("DorsetCollegeOnlineStore.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DorsetCollegeOnlineStore.Models.CartProduct", b =>
+                {
+                    b.HasOne("DorsetCollegeOnlineStore.Models.Cart", "Cart")
+                        .WithMany()
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DorsetCollegeOnlineStore.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("DorsetCollegeOnlineStore.Models.Order", b =>
+                {
+                    b.HasOne("DorsetCollegeOnlineStore.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DorsetCollegeOnlineStore.Models.OrderProduct", b =>
+                {
+                    b.HasOne("DorsetCollegeOnlineStore.Models.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DorsetCollegeOnlineStore.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
                 });
 #pragma warning restore 612, 618
         }

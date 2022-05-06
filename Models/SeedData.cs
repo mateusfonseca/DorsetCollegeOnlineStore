@@ -333,6 +333,8 @@ public static class SeedData
             );
         }
 
+        context.SaveChanges();
+        
         if (!context.Cart.Any())
         {
             context.Cart.AddRange(
@@ -378,6 +380,8 @@ public static class SeedData
                 }
             );
         }
+        
+        context.SaveChanges();
 
         if (!context.CartProduct.Any())
         {
@@ -454,6 +458,8 @@ public static class SeedData
                 }
             );
         }
+        
+        context.SaveChanges();
 
         if (!context.OrderProduct.Any())
         {

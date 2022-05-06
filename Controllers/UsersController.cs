@@ -35,7 +35,7 @@ namespace DorsetCollegeOnlineStore.Controllers
         {
             if (attempted)
                 ViewBag.Message = "User not found! Please, check your credentials.";
-            
+
             return View(await _context.User.ToListAsync());
         }
 
@@ -158,6 +158,12 @@ namespace DorsetCollegeOnlineStore.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var user = await _context.User.FindAsync(id);
+
+            foreach (var order in _context.Order.Where(o => o.UserId == id))
+            {
+                order.UserId = null;
+            }
+
             _context.User.Remove(user!);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -177,10 +183,10 @@ namespace DorsetCollegeOnlineStore.Controllers
             if (user.Any())
             {
                 Session.UserId = user.Single().Id;
-                return RedirectToAction("Index", "Home", new { userId = user.Single().Id });
+                return RedirectToAction("Index", "Home", new {userId = user.Single().Id});
             }
 
-            return RedirectToAction("Index", new { attempted = true });
+            return RedirectToAction("Index", new {attempted = true});
         }
 
         public new IActionResult SignOut()
