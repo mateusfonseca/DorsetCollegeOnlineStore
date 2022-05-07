@@ -24,7 +24,11 @@ builder.Services.AddDbContext<DorsetCollegeOnlineStoreContext>(options =>
                           "Connection string 'DorsetCollegeOnlineStoreContext' not found.")));
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddRazorOptions(options =>
+    {
+        options.ViewLocationFormats.Add("/{0}.cshtml");
+    });
 
 builder.Services.AddDistributedMemoryCache();
 

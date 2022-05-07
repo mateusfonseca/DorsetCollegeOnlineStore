@@ -248,5 +248,58 @@ namespace DorsetCollegeOnlineStore.Controllers
 
             return RedirectToAction("Details", "Carts");
         }
+
+        public async Task<CartProductViewModel> MiniCart()
+        {
+            var allCarts = await _context.Cart.ToListAsync();
+            int? id;
+
+            if (Session.UserId != null)
+                id = allCarts.Last(c => c.UserId == Session.UserId).Id;
+            else
+                return null;
+
+            var cart = await _context.Cart
+                .FirstOrDefaultAsync(m => m.UserId == id);
+            if (cart == null)
+            {
+                return null;
+            }
+
+            var cartProducts = await _context.CartProduct.ToListAsync();
+
+            if (cartProducts.Count > 0)
+            {
+                cartProducts = cartProducts.FindAll(cp => cp.CartId == id).OrderBy(cp => cp.ProductId).ToList();
+
+                if (cartProducts.Count < 1)
+                    return null;
+
+                var productsIds = cartProducts.Select(cp => cp.ProductId).ToList();
+                var productsQtties = cartProducts.Select(cp => cp.Quantity).ToList();
+
+                var cartProductsVm = new CartProductViewModel
+                {
+                    Quantities = productsIds.Zip(productsQtties, (k, v) => new {k, v})
+                        .ToDictionary(x => x.k, x => x.v),
+                    CartId = cart.Id,
+                    ProductsIds = productsIds,
+                    Products = _context.Product.ToListAsync().Result
+                        .Where(p => productsIds.Contains(p.Id)).ToList(),
+                };
+
+                var subtotal = cartProductsVm.Products.Select(p =>
+                    p.Price * cartProducts.Single(cp => cp.ProductId == p.Id)!.Quantity).ToList();
+
+                cartProductsVm.Subtotals = productsIds.Zip(subtotal, (k, v) => new {k, v})
+                    .ToDictionary(x => x.k, x => x.v);
+
+                cartProductsVm.TotalPrice = cartProductsVm.Subtotals.Values.Aggregate(0M, (acc, sub) => acc + sub);
+
+                return cartProductsVm;
+            }
+
+            return null;
+        }
     }
 }

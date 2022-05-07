@@ -1,0 +1,56 @@
+@*
+ Dorset College Dublin
+ BSc in Science in Computing & Multimedia
+ Object-Oriented Programming - BSC20921
+ Stage 2, Semester 2
+ Continuous Assessment 2
+ 
+ Student Name: Mateus Fonseca Campos
+ Student Number: 24088
+ Student Email: 24088@student.dorset-college.ie
+ 
+ Submission date: 8 May 2022
+*@
+
+@model DorsetCollegeOnlineStore.Models.CartProductViewModel
+
+@if (Session.UserId != null)
+{
+    if (Model.CartId != -1)
+    {
+        <div>
+            <table class="table">
+                <thead></thead>
+                <tbody>
+                @foreach (var item in Model.Products!)
+                {
+                    <tr>
+                        <td>
+                            <img alt="Product image" width="50" height="50" src="@Html.DisplayFor(modelItem => item.Image)"/>
+                        </td>
+                        <td>
+                            Price
+                            @Html.DisplayFor(modelItem => item.Price)
+                        </td>
+                        <td>
+                            Count
+                            @Html.DisplayFor(modelItem => modelItem.Quantities![item.Id])
+                        </td>
+                        <td>
+                            Subtotal
+                            @Html.DisplayFor(modelItem => modelItem.Subtotals![item.Id])
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <p style="padding-left: 8px">Total: @Model.TotalPrice?.ToString("C")</p>
+        </div>
+    }
+    else
+    {
+        <p style="padding: 8px">Your cart is empty!</p>
+    }
+}
