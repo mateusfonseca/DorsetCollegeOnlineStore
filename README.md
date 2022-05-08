@@ -17,7 +17,15 @@
 
 This repository contains an "Online Store" ASP.NET Core MVC web application developed for my CA2 at Dorset College BSc in Computing, Year 2, Semester 2.
 
-## Part 1: Background
+## Part 1: Requirements
+
+This projects requires both Microsoft's Entity Framework Core and SQLite to be installed and accessible in order to be executed successfully.
+
+InitialMigration is included in the package and the database will be populated at first run.
+
+For more information, please visit the [official repository](https://github.com/dotnet/efcore).
+
+## Part 2: Background
 
 MVC, Model-View-Controller, is an architectural pattern for designing and developing applications, and, at its core, there resides one of the key principles of programming: *separation of concerns*.
 
@@ -35,7 +43,7 @@ The MVC pattern divides the project into three distinct components with differen
 
 Applying robust architectural principles to software development, such as MVC, are an indispensable part of creating reliable and scalable products. 
 
-## Part 2: Report
+## Part 3: Report
 
 This project was developed based on Microsoft's ASP.NET Core platform and the MVC design pattern. The following scheme explains the organization of its main components:
 
@@ -126,7 +134,7 @@ Additionally:
   - **4.1. MiniCartViewComponent**  
   This class defines a ViewComponent that inflates a MiniCart view dynamically, based on the ID of the currently logged-in user.
 
-## Part 3: References
+## Part 4: References
 
 Conceptually, every line of code in this project was written based on official documentation:
 
