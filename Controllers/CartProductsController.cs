@@ -78,6 +78,9 @@ namespace DorsetCollegeOnlineStore.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(int quantity, int productId)
         {
+            if (Session.UserId == null)
+                return RedirectToAction("Index", "Users");
+            
             var cartProduct = new CartProduct
             {
                 CartId = _context.Cart.ToList().Find(c => c.UserId == Session.UserId)!.Id,
