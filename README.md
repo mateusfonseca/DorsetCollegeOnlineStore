@@ -39,7 +39,7 @@ Applying robust architectural principles to software development, such as MVC, a
 
 This project was developed based on Microsoft's ASP.NET Core platform and the MVC design pattern. The following scheme explains the organization of its main components:
 
-- **1. Models**
+- **1. Models**  
   - **1.1. Cart**  
   This class represents the Cart entity in the database.
   - **1.2. CartProduct**  
@@ -66,7 +66,7 @@ This project was developed based on Microsoft's ASP.NET Core platform and the MV
     This class represents the User entity in the database.
 
 
-- **2. Views**
+- **2. Views**  
   - **2.1 CartProducts**  
   The Razor files in this folder define the CartProducts view and its actions:
     - Create/Delete/Details/Edit - CRUD.
@@ -104,7 +104,7 @@ This project was developed based on Microsoft's ASP.NET Core platform and the MV
     - Index - displays sign-in page.
 
 
-- **3. Controllers**
+- **3. Controllers**  
   - **3.1 CartProductsController**  
   This class controls users requests through actions related to the CartProducts view.
   - **3.2 CartsController**  
