@@ -1,5 +1,8 @@
 # ASP.NET Core MVC: Online Store Web App
 
+**Author:** Mateus Fonseca Campos  
+**Email:** mateusff8@gmail.com
+
 **Dorset College Dublin**  
 **BSc in Science in Computing & Multimedia**  
 **Object-Oriented Programming - BSC20921**  
